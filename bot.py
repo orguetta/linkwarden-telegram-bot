@@ -60,7 +60,7 @@ def validate_api_url() -> None:
         if not parsed.hostname:
             raise ValueError("Invalid URL: no hostname")
         # Reject private/local APIs unless explicitly enabled
-        if parsed.hostname in ('localhost', '127.0.0.1', '0.0.0.0', '::1'):
+        if parsed.hostname in ('localhost', '127.0.0.1', '0.0.0.0', '::1'):  # nosec B104
             allow_local = os.environ.get('ALLOW_LOCAL_LINKWARDEN', 'false').lower() == 'true'
             if not allow_local:
                 raise ValueError("Local Linkwarden instances not allowed. Set ALLOW_LOCAL_LINKWARDEN=true to enable.")
@@ -100,7 +100,7 @@ def extract_links(text: str) -> list:
             
             # Reject private/local addresses (SSRF protection)
             blocked_hosts = {
-                'localhost', '127.0.0.1', '0.0.0.0', '::1', '::',
+                'localhost', '127.0.0.1', '0.0.0.0', '::1', '::',  # nosec B104
                 '169.254.169.254'  # AWS metadata service
             }
             
