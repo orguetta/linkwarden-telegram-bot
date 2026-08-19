@@ -14,6 +14,7 @@ services:
       - LINKWARDEN_API_URL=${LINKWARDEN_API_URL}
       - LINKWARDEN_API_KEY=${LINKWARDEN_API_KEY}
       - LINKWARDEN_COLLECTION_ID=${LINKWARDEN_COLLECTION_ID}
+    command: ["python", "bot.py"]
     restart: unless-stopped
 
 networks:

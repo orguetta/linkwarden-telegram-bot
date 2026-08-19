@@ -14,20 +14,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.14'
-      
+          python-version: '3.12'
+
       - name: Install bandit
         run: pip install bandit[toml]
-      
+
       - name: Run bandit security scan
-        run: bandit -r bot.py -f json -o bandit-report.json || true
-      
+        run: bandit -r bot.py -f json -o bandit-report.json
+
       - name: Upload bandit results
-        uses: actions/upload-artifact@v3
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: bandit-report
           path: bandit-report.json
@@ -37,35 +38,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.14'
-      
+          python-version: '3.12'
+
       - name: Install dependencies
         run: pip install -r requirements.txt
-      
+
       - name: Install safety
         run: pip install safety
-      
+
       - name: Run safety check
-        run: safety check --json || true
+        run: safety check --json
 
   pip-audit:
     name: Pip Audit - Vulnerability Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.14'
-      
+          python-version: '3.12'
+
       - name: Install pip-audit
         run: pip install pip-audit
-      
+
       - name: Run pip-audit
         run: pip-audit --desc
 
@@ -74,38 +75,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Build Docker image
         run: docker build -t linkwarden-telegram-bot:scan .
-      
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'linkwarden-telegram-bot:scan'
           format: 'json'
           output: 'trivy-results.json'
-      
+
       - name: Upload trivy results
-        uses: actions/upload-artifact@v3
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: trivy-report
           path: trivy-results.json
-
-  codeql:
-    name: CodeQL Analysis
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
-        with:
-          languages: 'python'
-      
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
-      
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2

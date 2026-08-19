@@ -1,53 +1,47 @@
 # Linkwarden Telegram Bot
 
-A Telegram bot that integrates with Linkwarden to save and manage bookmarks directly from Telegram.
+A Telegram bot that integrates with Linkwarden to save bookmarks directly from Telegram.
 
 ## Features
 
 - Save links to your Linkwarden collection
-- Search your bookmarks
-- Manage collections
-- Automated link metadata extraction
+- Rate limiting to prevent abuse
+- SSRF protection for safe URL handling
+- Configurable logging and limits
 
 ## Installation
 
-## Using Docker
+### Using Docker
 
-### 1. Clone the repository
+#### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/linkwarden-telegram-bot.git
+git clone https://github.com/orguetta/linkwarden-telegram-bot.git
 cd linkwarden-telegram-bot
 ```
 
-### 2. Build the Docker image
+#### 2. Copy the example env file
 
 ```bash
-docker build -t linkwarden-telegram-bot .
+cp example.env .env
 ```
 
-### 3. Copy a .env.example to .env file
-
-```bash
-cp .env.example .env
-```
-
-### 4. Edit the .env file and set the required environment variables
+#### 3. Edit the .env file and set the required environment variables
 
 ```bash
 TELEGRAM_TOKEN=your_bot_token
-LINKWARDEN_API_URL=https://your-linkwarden-instance.com/api
+LINKWARDEN_API_URL=https://your-linkwarden-instance.com
 LINKWARDEN_API_KEY=your_api_key
 LINKWARDEN_COLLECTION_ID=your_collection_id
 ```
 
-### 5. Run the Docker compose file
+#### 4. Build and run with Docker Compose
 
 ```bash
 docker-compose up -d
 ```
 
-## Manual Installation
+### Manual Installation
 
 ```bash
 pip install -r requirements.txt
@@ -56,9 +50,9 @@ pip install -r requirements.txt
 ### Set up environment variables
 
 ```bash
-export TELEGRAM_TOKEN=your_bot_token 
-export LINKWARDEN_API_URL=https://your-linkwarden-instance.com/api 
-export LINKWARDEN_API_KEY=your_api_key 
+export TELEGRAM_TOKEN=your_bot_token
+export LINKWARDEN_API_URL=https://your-linkwarden-instance.com
+export LINKWARDEN_API_KEY=your_api_key
 export LINKWARDEN_COLLECTION_ID=your_collection_id
 ```
 
@@ -72,29 +66,38 @@ python bot.py
 
 ### Adding Links
 
-To add a link to your Linkwarden collection, simply send a message containing the link to the bot. The bot will automatically extract the link and add it to your specified collection.
+Send a message containing links to the bot. The bot will automatically extract HTTP/HTTPS URLs and add them to your specified Linkwarden collection.
 
 ### Example
 
-1. Send a message to the bot with a link:
+1. Send a message to the bot:
 
-```plaintext
+```
 Check out this cool website: https://example.com
 ```
 
-2. The bot will respond with a confirmation message:
+2. The bot will respond:
 
-```plaintext
-Links added to Linkwarden:
-https://example.com
+```
+Added 1 link(s) to Linkwarden
 ```
 
-### Error Handling
+## Configuration
 
-If the bot encounters an error while adding a link, it will notify you with a message indicating the failed link and the reason for the failure.
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `TELEGRAM_TOKEN` | Yes | - | Telegram bot token from BotFather |
+| `LINKWARDEN_API_URL` | Yes | - | Linkwarden server URL |
+| `LINKWARDEN_API_KEY` | Yes | - | Linkwarden API key |
+| `LINKWARDEN_COLLECTION_ID` | Yes | - | Target collection ID |
+| `LOG_LEVEL` | No | `WARNING` | Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL) |
+| `RATE_LIMIT_THRESHOLD` | No | `10` | Max messages per user per window |
+| `RATE_LIMIT_WINDOW` | No | `60` | Rate limit window in seconds |
+| `MAX_MESSAGE_SIZE` | No | `51200` | Max message size in bytes |
+| `MAX_LINKS_PER_MESSAGE` | No | `10` | Max links per message |
+| `ALLOW_LOCAL_LINKWARDEN` | No | `false` | Allow localhost/private API URLs |
 
 ## Badges
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/yourusername/linkwarden-telegram-bot/docker-publish.yml?branch=main)
-![Code Coverage](https://img.shields.io/codecov/c/github/yourusername/linkwarden-telegram-bot)
-![License](https://img.shields.io/github/license/yourusername/linkwarden-telegram-bot)
+![Build Status](https://img.shields.io/github/actions/workflow/status/orguetta/linkwarden-telegram-bot/docker-publish.yml?branch=main)
+![License](https://img.shields.io/github/license/orguetta/linkwarden-telegram-bot)

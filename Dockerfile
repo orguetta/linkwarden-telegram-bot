@@ -1,16 +1,16 @@
-FROM python:3.14-alpine
+FROM python:3.12-alpine
 
-# Set the working directory
 WORKDIR /app
 
-# Copy requirements.txt if you have one
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -u 1001 -S appuser -G appgroup
+
 COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Upgrade pip and setuptools, then install dependencies
-RUN pip install --upgrade pip setuptools && pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of your application code
 COPY bot.py .
+RUN chown -R appuser:appgroup /app
 
-# Start the bot
+USER appuser
+
 CMD ["python", "bot.py"]
