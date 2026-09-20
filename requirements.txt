@@ -1,6 +1,6 @@
 python-telegram-bot>=22.8,<23
 requests>=2.34.2,<3
-urllib3>=2.7.0,<3
+urllib3>=2.8.0,<3
 
 # Test dependencies
 pytest>=7.0
